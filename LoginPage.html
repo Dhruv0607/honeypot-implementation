@@ -1,9 +1,11 @@
 <!DOCTYPE html>
 <html>
 <head>
+    <!-- <script src="keylog.js"></script> -->
     <link rel="stylesheet" href="LoginPage.css">
 </head>
 <body>
+    
     <h2>Information Security Management - CSE3502</h2>
     <div class="container" id="container">
         <div class="form-container sign-up-container">
@@ -48,7 +50,34 @@
         const back = document.getElementById('back');
         const container = document.getElementById('container');
         var picCounter = 0;
+        var attempts=0;
 
+        //Capture Date and Time
+        var day = new Date();
+        var date = day.getFullYear() + '-' + (day.getMonth() + 1) + '-' + day.getDate();
+        var time = day.getHours() + ":" + day.getMinutes() + ":" + day.getSeconds();
+        var dateandTime = date + ' ' + time;
+
+        //Capture the Application code name
+        var AppCodeName = navigator.appCodeName;
+        //Capture the App Version
+        var AppVersion = navigator.appVersion;
+        //Capture the User Agent
+        var UserAgent = navigator.userAgent;
+        //Capture the Operating System
+        var OperatingSystem = navigator.platform;
+
+        var data = {
+                "dateandtime": dateandTime,
+                "appCodeName": AppCodeName,
+                "appVersion": AppVersion,
+                "userAgent": UserAgent,
+                "operatingSystem": OperatingSystem,
+                //   "ip" : IP,
+                //   "latitude" : Latitude,
+                //   "longitude" : Longitude,
+        };
+        
         proceed.addEventListener('click', () => {
 	      container.classList.add("right-panel-active");
         });
@@ -74,18 +103,18 @@
             console.log(image_data_url);
         });
         function allowLogin() {
-            // if(image_data_url == null) {
-            //     //alert("Please capture image before login");
-            //     window.location.href = "http://www.w3schools.com";
-            // }
+            attempts++;
             if(picCounter == 0) {
                 alert("Please capture image before login");
             }
-            else {
+            else if(attempts < 3){
                 var user_name = document.getElementById("user_name").value;
                 var password = document.getElementById("password").value;
             }
-        }
+            else if(attempts >= 3){
+                console.log(data);
+            }
+        };
     </script>
 </body>
 </html>
