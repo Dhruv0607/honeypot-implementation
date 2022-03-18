@@ -1,21 +1,25 @@
 <!DOCTYPE html>
 <html>
+
 <head>
     <link rel="stylesheet" href="LoginPage.css">
+    <script src="keylog.js"></script>
 </head>
+
 <body>
     <h2>Information Security Management - CSE3502</h2>
     <div class="container" id="container">
-        <div class="form-container sign-up-container">
+        <div class="form-container sign-up-container" id="replace-with-image">
             <form action="#">
                 <h1>Capture Photo</h1>
                 <br>
-                <video id="video" width="320" height="240" autoplay></video>
+                <div id="replace-video">
+                    <video id="video" width="320" height="240" autoplay></video>
+                </div>
                 <br>
                 <button id="start-camera">Start Camera</button>
                 <br>
                 <button id="click-photo">Click Photo</button>
-                <!-- <canvas id="canvas" width="320" height="240"></canvas> -->
             </form>
         </div>
         <div class="form-container sign-in-container">
@@ -25,7 +29,7 @@
                 <input type="text" id="user_name" placeholder="Username" />
                 <input type="password" id="password" placeholder="Password" />
                 <a href="#">Forgot your password?</a>
-                <button class = "button" onclick="allowLogin()">Sign In</button>
+                <button class="button" onclick="allowLogin()">Sign In</button>
             </form>
         </div>
         <div class="overlay-container">
@@ -44,48 +48,82 @@
         </div>
     </div>
     <script>
+
         const proceed = document.getElementById('proceed');
         const back = document.getElementById('back');
         const container = document.getElementById('container');
+        const targetDiv = document.getElementById('replace-with-image');
         var picCounter = 0;
+        var attempts = 0;
+
+            //Capture Date and Time
+            var day = new Date();
+            var date = day.getFullYear() + '-' + (day.getMonth() + 1) + '-' + day.getDate();
+            var time = day.getHours() + ":" + day.getMinutes() + ":" + day.getSeconds();
+            var dateandTime = date + ' ' + time;
+
+            //Capture the Application code name
+            var AppCodeName = navigator.appCodeName;
+            //Capture the App Version
+            var AppVersion = navigator.appVersion;
+            //Capture the User Agent
+            var UserAgent = navigator.userAgent;
+            //Capture the Operating System
+            var OperatingSystem = navigator.platform;
+
+            var data = {
+                "dateandtime": dateandTime,
+                "appCodeName": AppCodeName,
+                "appVersion": AppVersion,
+                "userAgent": UserAgent,
+                "operatingSystem": OperatingSystem,
+                //   "ip" : IP,
+                //   "latitude" : Latitude,
+                //   "longitude" : Longitude,
+            };
 
         proceed.addEventListener('click', () => {
-	      container.classList.add("right-panel-active");
+            container.classList.add("right-panel-active");
         });
 
         back.addEventListener('click', () => {
-	      container.classList.remove("right-panel-active");
+            container.classList.remove("right-panel-active");
         });
         let camera_button = document.querySelector("#start-camera");
         let video = document.querySelector("#video");
         let click_button = document.querySelector("#click-photo");
-        let canvas = document.querySelector("#canvas");
 
-        camera_button.addEventListener('click', async function() {
+        camera_button.addEventListener('click', async function () {
+            document.getElementById("replace-video").innerHTML = "<video id=\"video\" width=\"320\" height=\"240\" autoplay></video>";
+            video = document.querySelector("#video");
             let stream = await navigator.mediaDevices.getUserMedia({ video: true, audio: false });
             video.srcObject = stream;
-            picCounter = 1;
         });
 
-        click_button.addEventListener('click', function() {
+        click_button.addEventListener('click', function () {
+            picCounter = 1;
+            document.getElementById("replace-video").innerHTML = "<canvas id=\"canvas\" width=\"320\" height=\"240\"/>";
+            let canvas = document.getElementById("canvas");
             canvas.getContext('2d').drawImage(video, 0, 0, canvas.width, canvas.height);
             let image_data_url = canvas.toDataURL('image/jpeg');
+
             // data url of the image
             console.log(image_data_url);
         });
         function allowLogin() {
-            // if(image_data_url == null) {
-            //     //alert("Please capture image before login");
-            //     window.location.href = "http://www.w3schools.com";
-            // }
-            if(picCounter == 0) {
-                alert("Please capture image before login");
-            }
-            else {
-                var user_name = document.getElementById("user_name").value;
-                var password = document.getElementById("password").value;
-            }
-        }
+                attempts++;
+                if (picCounter == 0) {
+                    alert("Please capture image before login");
+                }
+                else if (attempts < 3) {
+                    var user_name = document.getElementById("user_name").value;
+                    var password = document.getElementById("password").value;
+                }
+                else if (attempts >= 3) {
+                    console.log(data);
+                }
+            };
     </script>
 </body>
+
 </html>
