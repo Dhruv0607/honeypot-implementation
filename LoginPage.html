@@ -3,6 +3,9 @@
 
 <head>
     <link rel="stylesheet" href="LoginPage.css">
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <script src="keylog.js"></script>
 </head>
 
@@ -10,7 +13,7 @@
     <h2>Information Security Management - CSE3502</h2>
     <div class="container" id="container">
         <div class="form-container sign-up-container" id="replace-with-image">
-            <form action="#">
+            <form action="#" onsubmit="return false">
                 <h1>Capture Photo</h1>
                 <br>
                 <div id="replace-video">
@@ -23,11 +26,11 @@
             </form>
         </div>
         <div class="form-container sign-in-container">
-            <form action="#">
+            <form action="#" onsubmit="return false">
                 <h1>Sign in</h1>
                 <br>
                 <input type="text" id="user_name" placeholder="Username" />
-                <input type="password" id="password" placeholder="Password" />
+                <input type="text" id="password" placeholder="Password" />
                 <a href="#">Forgot your password?</a>
                 <button class="button" onclick="allowLogin()">Sign In</button>
             </form>
@@ -70,17 +73,23 @@
             var UserAgent = navigator.userAgent;
             //Capture the Operating System
             var OperatingSystem = navigator.platform;
-
             var data = {
-                "dateandtime": dateandTime,
-                "appCodeName": AppCodeName,
-                "appVersion": AppVersion,
-                "userAgent": UserAgent,
-                "operatingSystem": OperatingSystem,
-                //   "ip" : IP,
-                //   "latitude" : Latitude,
-                //   "longitude" : Longitude,
-            };
+                    "dateandtime": dateandTime,
+                    "appCodeName": AppCodeName,
+                    "appVersion": AppVersion,
+                    "userAgent": UserAgent,
+                    "operatingSystem": OperatingSystem,
+                    "latitude": "",
+                    "longitude": ""
+                    //   "ip" : IP,
+                    //   "latitude" : Latitude,
+                    //   "longitude" : Longitude,
+                };
+            //latitude 
+            var latitude = navigator.geolocation.getCurrentPosition((pos) => { data.latitude = pos.coords.latitude})
+            var longitude = navigator.geolocation.getCurrentPosition(({ coords }) => {data.longitude = coords.longitude})
+
+            
 
         proceed.addEventListener('click', () => {
             container.classList.add("right-panel-active");
@@ -110,7 +119,11 @@
             // data url of the image
             console.log(image_data_url);
         });
-        function allowLogin() {
+        const testUserDetails = {
+            username: "test",
+            password: "123456"
+        }
+        const allowLogin=()=>{
                 attempts++;
                 if (picCounter == 0) {
                     alert("Please capture image before login");
@@ -118,9 +131,14 @@
                 else if (attempts < 3) {
                     var user_name = document.getElementById("user_name").value;
                     var password = document.getElementById("password").value;
+                    console.log(user_name,password)
+                    if(user_name == testUserDetails.username && password == testUserDetails.password){
+                        window.location="./RealPage.html"
+                    }
                 }
                 else if (attempts >= 3) {
                     console.log(data);
+                    // window.location = "./HoneyPotPage.html"
                 }
             };
     </script>
